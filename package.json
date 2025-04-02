@@ -6,7 +6,12 @@
   "scripts": {
     "build": "tsc && npm run copy-files && chmod 755 build/index.js",
     "copy-files": "cp -r src/starship/tools/texts build/starship/tools/",
-    "clean": "rimraf build"
+    "clean": "rimraf build",
+    "test": "vitest",
+    "test:watch": "vitest --watch",
+    "test:coverage": "vitest --coverage",
+    "format": "biome check --write",
+    "lint": "biome check"
   },
   "keywords": [],
   "author": "",
@@ -17,18 +22,22 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.13.10",
     "rimraf": "^6.0.1",
     "tsx": "^4.19.3",
-    "typescript": "^5.8.2"
+    "typescript": "^5.8.2",
+    "vitest": "^3.1.1"
   },
   "files": ["build"],
   "pnpm": {
     "onlyBuiltDependencies": ["@biomejs/biome", "esbuild"]
   },
   "dependencies": {
+    "@ai-sdk/mistral": "^1.2.1",
     "@mistralai/mistralai": "^1.5.2",
     "@modelcontextprotocol/sdk": "^1.7.0",
+    "ai": "^4.2.6",
     "dotenv": "^16.4.7",
     "zod": "^3.24.2"
   }
