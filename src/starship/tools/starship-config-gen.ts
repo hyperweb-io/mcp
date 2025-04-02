@@ -402,7 +402,7 @@ const registrySchema = z
   })
   .optional();
 
-// --- Define final input schema ---
+// --- Define final input schema for GENERATION ---
 const starshipConfigInputSchema = z.object({
   configName: z
     .string()
@@ -424,8 +424,18 @@ const starshipConfigInputSchema = z.object({
   // Add ingress schema if needed
 });
 
-// Export the inferred input type for use elsewhere
 export type StarshipConfigInput = z.infer<typeof starshipConfigInputSchema>;
+
+// --- Define input schema for VERIFICATION ---
+const verifyStarshipConfigInputSchema = z.object({
+  yamlContent: z
+    .string()
+    .describe("The Starship configuration content in YAML format as a string."),
+});
+
+export type VerifyStarshipConfigInput = z.infer<
+  typeof verifyStarshipConfigInputSchema
+>;
 
 // Define the output structure type (more detailed now)
 // Using 'any' for nested objects where structure can vary greatly (e.g., genesis, relayer config)
@@ -566,22 +576,18 @@ export function generateStarshipYaml(input: StarshipConfigInput): string {
 }
 
 /**
- * Registers the Starship config generation tool with the provided MCP server instance.
- * @param server The McpServer instance to register the tool with.
+ * Registers the Starship config generation and verification tools with the MCP server.
+ * @param server The McpServer instance to register the tools with.
  */
 export function registerStarshipConfigGenTool(server: McpServer): void {
+  // --- Generate Tool ---
   server.tool(
     "generateStarshipConfig",
     "Generates a Starship configuration file in YAML format based on detailed input options.",
-    starshipConfigInputSchema.shape, // Use the expanded schema shape
+    starshipConfigInputSchema.shape, // Use the generation schema shape
     async (input: StarshipConfigInput) => {
-      // Explicitly type the input parameter (already inferred but good practice)
       try {
-        // Validate the input against the full schema (done implicitly by MCP server before calling, but can add explicit parse here if needed)
-        // const validatedInput = starshipConfigInputSchema.parse(input); // Uncomment for explicit validation within tool
-
-        const yamlConfig = generateStarshipYaml(input); // Use potentially validated input
-
+        const yamlConfig = generateStarshipYaml(input);
         return {
           content: [
             {
@@ -593,19 +599,93 @@ export function registerStarshipConfigGenTool(server: McpServer): void {
       } catch (err: unknown) {
         let errorMessage = `Error generating Starship configuration: ${String(err)}`;
         if (err instanceof z.ZodError) {
-          // Provide more specific validation error messages
-          errorMessage = `Input validation error: ${err.errors
+          errorMessage = `Input validation error during generation: ${err.errors
             .map((e) => `${e.path.join(".")} - ${e.message}`)
             .join("; ")}`;
-          console.error("Zod Validation Error:", err.flatten());
+          console.error("Zod Validation Error (Generate):", err.flatten());
         } else if (err instanceof Error) {
           errorMessage = `Error generating Starship configuration: ${err.message}`;
           console.error("Generation Error:", err);
         } else {
           console.error("Unknown Generation Error:", err);
         }
-
+        // Use MCP error format
         return {
+          isError: true,
+          content: [
+            {
+              type: "text",
+              text: errorMessage,
+            },
+          ],
+        };
+      }
+    },
+  );
+
+  // --- Verify Tool ---
+  server.tool(
+    "verifyStarshipConfig",
+    "Parses and validates a Starship configuration YAML string against the known schema.",
+    verifyStarshipConfigInputSchema.shape, // Use the verification schema shape
+    async (input: VerifyStarshipConfigInput) => {
+      try {
+        // 1. Parse the YAML string
+        // Use load instead of safeLoad as safeLoad is not exposed in type defs
+        const parsedConfig = YAML.load(input.yamlContent);
+
+        // Basic check if parsing resulted in something usable
+        if (
+          typeof parsedConfig !== "object" ||
+          parsedConfig === null ||
+          Array.isArray(parsedConfig)
+        ) {
+          throw new Error(
+            "Invalid YAML structure: Expected a top-level object.",
+          );
+        }
+
+        // 2. Validate the parsed object against the Zod schema
+        const validationResult =
+          starshipConfigInputSchema.safeParse(parsedConfig);
+
+        if (validationResult.success) {
+          // Valid configuration
+          return {
+            content: [
+              {
+                type: "text",
+                text: "Starship configuration is valid according to the schema.",
+              },
+            ],
+          };
+        }
+
+        // Invalid configuration according to schema
+        const errorDetails = validationResult.error.errors
+          .map((e) => `- ${e.path.join(".") || "root"}: ${e.message}`)
+          .join("\n");
+        return {
+          isError: true, // Indicate it's a validation error, not a tool crash
+          content: [
+            {
+              type: "text",
+              text: `Starship configuration is invalid:\n${errorDetails}`,
+            },
+          ],
+        };
+      } catch (err: unknown) {
+        // Handle YAML parsing errors or other unexpected errors
+        let errorMessage = "Failed to verify Starship configuration.";
+        if (err instanceof Error) {
+          errorMessage = `Error verifying Starship configuration: ${err.message}`;
+        } else {
+          errorMessage = `An unknown error occurred during verification: ${String(err)}`;
+        }
+        console.error("Verification Error:", err);
+        // Use MCP error format
+        return {
+          isError: true,
           content: [
             {
               type: "text",

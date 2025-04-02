@@ -23,10 +23,11 @@ async function main() {
     version: VERSION,
   });
 
-  const transport = new StdioServerTransport();
-  await server.connect(transport);
   registerStarshipConfigGenTool(server);
   registerStarshipSetupTool(server);
+
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
   console.log("Hyperweb Agentic Tools MCP server started on stdio");
 }
 
