@@ -3,7 +3,7 @@ name: Release
 on:
   push:
     branches:
-      - main
+      - ci/release-workflow-setup
 
 permissions:
   contents: write # to be able to publish a GitHub release
@@ -61,4 +61,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: pnpm run release
+        run: pnpm run release --dry-run
