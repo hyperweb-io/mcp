@@ -3,6 +3,9 @@
   "version": "0.1.3",
   "description": "Model Context Protocol Hyperweb products",
   "main": "build/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "rm -rf build && tsc && npm run copy-assets && chmod 755 build/index.js",
     "copy-assets": "./scripts/copy-assets.sh",
@@ -14,7 +17,8 @@
     "test:coverage": "vitest --coverage",
     "inspector": "npm run build && npm exec @modelcontextprotocol/inspector node build/index.js",
     "format": "biome check --write",
-    "lint": "biome check"
+    "lint": "biome check",
+    "release": "semantic-release"
   },
   "keywords": [],
   "author": "developers@hyperweb.io",
@@ -25,11 +29,16 @@
     "@hyperweb/mcp-server": "./build/index.js"
   },
   "devDependencies": {
+    "@anolilab/semantic-release-pnpm": "^1.1.11",
     "@biomejs/biome": "1.9.4",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^11.0.2",
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^22.13.10",
     "@types/node-fetch": "^2.6.12",
     "rimraf": "^6.0.1",
+    "semantic-release": "^24.2.3",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "vitest": "^3.1.1"
