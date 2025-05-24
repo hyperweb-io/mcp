@@ -1,7 +1,6 @@
 {
     "branches": [
-        "main",
-        "ci/release-workflow-setup"
+        "main"
     ],
     "plugins": [
         "@semantic-release/commit-analyzer",
