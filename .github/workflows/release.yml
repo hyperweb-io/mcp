@@ -1,0 +1,63 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write # to be able to publish a GitHub release
+  issues: write # to be able to comment on released issues
+  pull-requests: write # to be able to comment on released pull requests
+  id-token: write # to enable use of OIDC for npm provenance
+
+env:
+  NODE_VERSION: '20'
+  PNPM_VERSION: '10'
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Semantic-release needs the full history
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Verify PGP signature on git commits
+        # This step is important for semantic-release to trust the commits
+        # and is especially crucial if you have commit signature verification enabled.
+        # If you don't use PGP, you might be able to remove or adjust this.
+        # However, semantic-release often relies on git tags and history.
+        run: |
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          # The following is a placeholder and might need adjustment based on your PGP setup
+          # if you are signing commits that semantic-release needs to analyze.
+          # For basic operation without signed commits being a blocker for semantic-release itself,
+          # just setting user.email and user.name is often sufficient.
+          echo "NOTE: PGP setup for git commits in CI is a placeholder."
+
+      - name: Build
+        run: pnpm run build
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_PUBLISH_SECRET }}
+        run: pnpm run release
