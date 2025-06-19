@@ -20,7 +20,11 @@ export function registerUseChainRegistryTool(server: McpServer): void {
     'useChainRegistry',
     'This tool provides comprehensive examples and usage patterns for the Chain Registry, call this tool for any Chain Registry implementation guidance.',
     {
-      majorVersion: z.enum(['v1', 'v2']).describe('The major version of the Chain Registry to use'),
+      majorVersion: z
+        .enum(['v1', 'v2'])
+        .describe(
+          'The major version of the Chain Registry to use. v2 is the latest version and default choice. v1 is legacy and should only be used when specifically mentioned.'
+        ),
     },
     async ({ majorVersion }) => {
       let text: string;

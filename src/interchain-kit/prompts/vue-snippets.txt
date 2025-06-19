@@ -180,7 +180,7 @@ const connectLeap = async() => {
 ----------------------------------------
 
 TITLE: Setting up ChainProvider with All Mainnet Chains
-DESCRIPTION: This Vue component snippet shows an alternative setup for the `ChainProvider`, importing all mainnet chains and asset lists directly from `@chain-registry/v2/mainnet`. This simplifies configuration if you need access to the entire mainnet registry.
+DESCRIPTION: This Vue component snippet shows an alternative setup for the `ChainProvider`, importing all mainnet chains and asset lists directly from `chain-registry/mainnet`. This simplifies configuration if you need access to the entire mainnet registry.
 SOURCE: https://github.com/hyperweb-io/interchain-kit/blob/main/packages/vue/README.md#_snippet_4
 
 LANGUAGE: vue
@@ -189,7 +189,7 @@ CODE:
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
-import { chains, assetLists } from '@chain-registry/v2/mainnet';
+import { chains, assetLists } from 'chain-registry/mainnet';
 import Show from './views/show.vue';
 </script>
 
@@ -212,7 +212,7 @@ import Show from './views/show.vue';
 ----------------------------------------
 
 TITLE: Setting up ChainProvider with All Mainnet Chains (Vue)
-DESCRIPTION: This Vue SFC illustrates an alternative ChainProvider setup where all mainnet chains and asset lists are imported from @chain-registry/v2. This approach is simpler if your application needs access to the full mainnet registry.
+DESCRIPTION: This Vue SFC illustrates an alternative ChainProvider setup where all mainnet chains and asset lists are imported from chain-registry. This approach is simpler if your application needs access to the full mainnet registry.
 SOURCE: https://github.com/hyperweb-io/interchain-kit/blob/main/examples/vue/README.md#_snippet_3
 
 LANGUAGE: vue
@@ -221,7 +221,7 @@ CODE:
 <script setup lang="ts">
 import { ChainProvider } from '@interchain-kit/vue';
 import { keplrWallet } from '@interchain-kit/keplr-extension';
-import { chains, assetLists } from '@chain-registry/v2/mainnet';
+import { chains, assetLists } from 'chain-registry/mainnet';
 import Show from './views/show.vue';
 </script>
 
@@ -244,7 +244,7 @@ import Show from './views/show.vue';
 ----------------------------------------
 
 TITLE: Setting up ChainProvider with Specific Chains
-DESCRIPTION: This Vue component snippet demonstrates setting up the `ChainProvider` with specific chains and asset lists imported individually from `@chain-registry/v2`. It requires explicitly listing the desired chains, asset lists, and available wallets.
+DESCRIPTION: This Vue component snippet demonstrates setting up the `ChainProvider` with specific chains and asset lists imported individually from `chain-registry`. It requires explicitly listing the desired chains, asset lists, and available wallets.
 SOURCE: https://github.com/hyperweb-io/interchain-kit/blob/main/packages/vue/README.md#_snippet_3
 
 LANGUAGE: vue
@@ -255,10 +255,10 @@ import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import { RouterView } from 'vue-router';
-import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
-import { chain as osmosisChain,assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
-import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@chain-registry/v2/testnet/osmosistestnet"
+import { chain as junoChain, assetList as junoAssetList } from "chain-registry/mainnet/juno";
+import { chain as osmosisChain,assetList as osmosisAssetList } from "chain-registry/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "chain-registry/mainnet/cosmoshub";
+import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "chain-registry/testnet/osmosistestnet"
 </script>
 
 <template>
@@ -280,7 +280,7 @@ import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@c
 ----------------------------------------
 
 TITLE: Setting up ChainProvider with Specific Chains (Vue)
-DESCRIPTION: This Vue SFC demonstrates how to set up the ChainProvider component by explicitly importing and providing specific chain and asset list data from @chain-registry/v2, along with wallet connectors. It is suitable for applications needing to support a predefined set of chains.
+DESCRIPTION: This Vue SFC demonstrates how to set up the ChainProvider component by explicitly importing and providing specific chain and asset list data from chain-registry, along with wallet connectors. It is suitable for applications needing to support a predefined set of chains.
 SOURCE: https://github.com/hyperweb-io/interchain-kit/blob/main/examples/vue/README.md#_snippet_2
 
 LANGUAGE: vue
@@ -291,10 +291,10 @@ import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import { RouterView } from 'vue-router';
-import { chain as junoChain, assetList as junoAssetList } from "@chain-registry/v2/mainnet/juno";
-import { chain as osmosisChain,assetList as osmosisAssetList } from "@chain-registry/v2/mainnet/osmosis";
-import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "@chain-registry/v2/mainnet/cosmoshub";
-import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "@chain-registry/v2/testnet/osmosistestnet"
+import { chain as junoChain, assetList as junoAssetList } from "chain-registry/mainnet/juno";
+import { chain as osmosisChain,assetList as osmosisAssetList } from "chain-registry/mainnet/osmosis";
+import { chain as cosmoshubChain, assetList as cosmoshubAssetList } from "chain-registry/mainnet/cosmoshub";
+import { chain as osmosisTestChain, assetList as osmosisTestAssetList } from "chain-registry/testnet/osmosistestnet"
 </script>
 
 <template>
@@ -327,7 +327,7 @@ import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import Show from './views/show.vue';
-import { chains, assetLists } from '@chain-registry/v2/mainnet';
+import { chains, assetLists } from 'chain-registry/mainnet';
 
 const chainNames = ['juno', 'stargaze']
 </script>
@@ -364,7 +364,7 @@ import { ChainProvider } from '@interchain-kit/vue'
 import { keplrWallet } from '@interchain-kit/keplr-extension';
 import { leapWallet } from '@interchain-kit/leap-extension';
 import Show from './views/show.vue';
-import { chains, assetLists } from '@chain-registry/v2/mainnet';
+import { chains, assetLists } from 'chain-registry/mainnet';
 
 const chainNames = ['juno', 'stargaze']
 </script>

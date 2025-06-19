@@ -232,13 +232,13 @@ Here are some more examples demonstrating common InterchainKit patterns:
 
 **1. Provider Setup with All Mainnet Chains:**
 
-This shows how to easily include all mainnet chains and assets from the `@chain-registry/v2` package.
+This shows how to easily include all mainnet chains and assets from the `chain-registry` package.
 
 ```typescript
 import { ChainProvider, useChain } from "@interchain-kit/react";
 import { keplrWallet } from "@interchain-kit/keplr-extension"; // Assuming keplr extension
 import { ThemeProvider } from "@interchain-ui/react"; // For UI components
-import { chains, assetLists } from '@chain-registry/v2/mainnet';
+import { chains, assetLists } from 'chain-registry/mainnet';
 
 import "@interchain-ui/react/styles"; // Import styles
 
