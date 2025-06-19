@@ -14,4 +14,4 @@
 1. Go to [Context 7](https://context7.com/hyperweb-io/interchainjs) and update the snippets
 2. Copy the snippets and paste them into the `_generated.txt` file
 3. Create snippets from other sources (e.g. examples in CIA) and paste them into the `_custom.txt` file
-4. Run `pnpm categorize-snippets` to categorize the snippets into the appropriate files
+4. Run `pnpm categorize:interchainjs` to categorize the snippets into the appropriate files
