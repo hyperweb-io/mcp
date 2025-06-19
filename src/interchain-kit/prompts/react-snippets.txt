@@ -41,7 +41,7 @@ await wallet.verifyArbitrary(chainId, signAddress, stdDoc)
 ----------------------------------------
 
 TITLE: Setting up ChainProvider with all chains (React)
-DESCRIPTION: This snippet shows an alternative configuration for `ChainProvider` where all mainnet chains and asset lists are imported from `@chain-registry/v2/mainnet`. This simplifies setup if your application needs to interact with a wide range of chains supported by the registry.
+DESCRIPTION: This snippet shows an alternative configuration for `ChainProvider` where all mainnet chains and asset lists are imported from `chain-registry/mainnet`. This simplifies setup if your application needs to interact with a wide range of chains supported by the registry.
 SOURCE: https://github.com/hyperweb-io/interchain-kit/blob/main/packages/react/README.md#_snippet_3
 
 LANGUAGE: js
@@ -50,7 +50,7 @@ CODE:
 import { ChainProvider, useChain } from "@interchain-kit/react";
 import { keplrWallet } from "@interchain-kit/keplr-extension";
 import { ThemeProvider } from "@interchain-ui/react";
-import { chains, assetLists } from '@chain-registry/v2/mainnet';
+import { chains, assetLists } from 'chain-registry/mainnet';
 
 import "@interchain-ui/react/styles";
  
