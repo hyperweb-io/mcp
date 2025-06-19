@@ -1,0 +1,258 @@
+TITLE: Chain Utility Functions Types
+DESCRIPTION: The types for chain utility functions
+SOURCE: v1, v2
+
+LANGUAGE: javascript
+CODE:
+```
+/************************
+ * Chain utils
+ ************************/
+import {
+  getGasPriceRangesFromChain,
+  getChainByChainName,
+  getChainByChainId,
+  getChainNameByChainId,
+  getChainIdByChainName,
+  getChainGasPriceRanges,
+  getChainPrettyName,
+  getChainBech32Prefix
+} from '@chain-registry/utils';
+
+// import from chain-registry or your own Chain[]
+import { chains } from 'chain-registry';
+
+// Type Definitions
+import { Chain } from '@chain-registry/types';
+export interface GasPriceRanges {
+    low: number;
+    average: number;
+    high: number;
+}
+export declare const getGasPriceRangesFromChain: (chain: Chain) => GasPriceRanges;
+export declare const getChainByChainName: (chains: Chain[], chainName: string) => Chain | undefined;
+export declare const getChainByChainId: (chains: Chain[], chainId: string) => Chain | undefined;
+export declare const getChainNameByChainId: (chains: Chain[], chainId: string) => string | undefined;
+export declare const getChainIdByChainName: (chains: Chain[], chainName: string) => string | undefined;
+export declare const getChainGasPriceRanges: (chains: Chain[], chainName: string) => GasPriceRanges | undefined;
+export declare const getChainPrettyName: (chains: Chain[], chainName: string) => string | undefined;
+export declare const getChainBech32Prefix: (chains: Chain[], chainName: string) => string | undefined;
+
+
+/************************
+ * Asset utils
+ ************************/
+import {
+  getAssetByDenom,
+  getAssetBySymbol,
+  getChainLogo,
+  getChainNameByDenom,
+  getChainNameByStakingDenom,
+  getCoinGeckoIdByDenom,
+  getDenomByCoinGeckoId,
+  getDenomBySymbol,
+  getExponentByDenom,
+  getExponentBySymbol,
+  getNativeAssetByChainName,
+  getSymbolByDenom,
+  getAssetLogoByDenom,
+  getAssetNameByDenom
+} from '@chain-registry/utils';
+
+// import from chain-registry or your own AssetList[]
+import { assets } from 'chain-registry';
+
+// Type Definitions
+import { Asset, AssetList, Chain, DenomUnit } from '@chain-registry/types';
+export type Denom = DenomUnit['denom'];
+export type Exponent = DenomUnit['exponent'];
+export declare const getAssetByDenom: (assets: AssetList[], denom: Denom, chainName?: string) => Asset | undefined;
+export declare const getAssetBySymbol: (assets: AssetList[], symbol: string, chainName?: string) => Asset | undefined;
+export declare const getDenomByCoinGeckoId: (assets: AssetList[], coinGeckoId: string, chainName?: string) => Denom | undefined;
+export declare const getDenomsByCoinGeckoId: (assets: AssetList[], coinGeckoId: string, chainName?: string) => Denom[];
+type GetCoinGeckoIdByDenomOptions = {
+    chainName?: string;
+    allowTestnet?: boolean;
+    customAssetFilter?: (asset: Asset) => boolean;
+    excludedChainNames?: string[];
+};
+export declare const getCoinGeckoIdByDenom: (assets: AssetList[], denom: Denom, { chainName, allowTestnet, customAssetFilter, excludedChainNames }?: GetCoinGeckoIdByDenomOptions) => string | undefined;
+export declare const getSymbolByDenom: (assets: AssetList[], denom: Denom, chainName?: string) => string | undefined;
+export declare const getDenomBySymbol: (assets: AssetList[], symbol: string, chainName?: string) => Denom | undefined;
+export declare const getExponentFromAsset: (asset: Asset) => number | undefined;
+export declare const getExponentByDenomFromAsset: (asset: Asset, denom: string) => number | undefined;
+export declare const getExponentByDenom: (assets: AssetList[], denom: Denom, chainName?: string) => Exponent | undefined;
+export declare const getExponentBySymbol: (assets: AssetList[], symbol: string, chainName?: string) => Exponent | undefined;
+export declare const getNativeAssetByChainName: (assets: AssetList[], chainName: string) => Asset | undefined;
+export declare const getAssetLogoByDenom: (assets: AssetList[], denom: Denom, chainName?: string) => string | undefined;
+export declare const getChainLogo: (assets: AssetList[], chainName: string) => string | undefined;
+export declare const getAssetNameByDenom: (assets: AssetList[], denom: Denom, chainName?: string) => string | undefined;
+export declare const getChainNameByDenom: (assets: AssetList[], denom: Denom) => string | undefined;
+export declare const getChainByStakingDenom: (chains: Chain[], denom: Denom) => Chain | undefined;
+export declare const getChainNameByStakingDenom: (chains: Chain[], denom: Denom) => string | undefined;
+
+
+/************************
+ * Calculation utils
+ ************************/
+import {
+  mapCoinGeckoPricesToDenoms,
+  convertBaseUnitToDollarValue,
+  convertDollarValueToBaseUnit,
+  convertBaseUnitToDisplayUnit,
+  convertDisplayUnitToBaseUnit,
+  roundDown
+} from '@chain-registry/utils';
+
+// Type Definitions
+import { AssetList } from '@chain-registry/types';
+import { Denom } from './assets';
+export interface CoinGeckoUSDPrice {
+    usd: number;
+}
+export interface DenomPriceMap {
+    [key: Denom]: number;
+}
+export declare const mapCoinGeckoPricesToDenoms: (assets: AssetList[], prices: Record<string, CoinGeckoUSDPrice>) => DenomPriceMap;
+export declare const roundDown: (value: number | string) => string;
+export declare const convertBaseUnitToDollarValue: (assets: AssetList[], prices: DenomPriceMap, symbol: string, amount: string | number, chainName?: string) => string;
+export declare const convertBaseUnitToDollarValueByDenom: (assets: AssetList[], prices: DenomPriceMap, denom: string, amount: string | number, chainName?: string) => string;
+export declare const convertDollarValueToBaseUnit: (assets: AssetList[], prices: DenomPriceMap, symbol: string, value: string | number, chainName?: string) => string;
+export declare const convertBaseUnitToDisplayUnit: (assets: AssetList[], symbol: string, amount: string | number, chainName?: string) => string;
+export declare const convertBaseUnitToDisplayUnitByDenom: (assets: AssetList[], denom: string, amount: string | number, chainName?: string) => string;
+export declare const convertDisplayUnitToBaseUnit: (assets: AssetList[], symbol: string, amount: string | number, chainName?: string) => string;
+
+----------------------------------------
+
+TITLE: Installing Chain Registry V1 Packages
+DESCRIPTION: Shows how to install chain registry packages for v1 with the correct version suffix. All v1 packages should be installed with "@1" postfix to ensure compatibility.
+SOURCE: v1
+
+LANGUAGE: terminal
+CODE:
+```
+# Install core chain registry packages for v1 (latest legacy versions)
+npm install chain-registry@"<2.0.0"
+npm install @chain-registry/client@"<2.0.0"
+npm install @chain-registry/utils@"<2.0.0"
+npm install @chain-registry/types@"<2.0.0"
+
+# Install additional v1 packages as needed
+npm install @chain-registry/assets@"<2.0.0"
+npm install @chain-registry/keplr@"<2.0.0"
+npm install @chain-registry/cosmostation@"<2.0.0"
+npm install @chain-registry/osmosis@"<2.0.0"
+npm install @chain-registry/juno@"<2.0.0"
+```
+
+----------------------------------------
+
+TITLE: Chain Registry V1 Data Structure (snake_case)
+DESCRIPTION: Example showing v1 chain registry data structure with snake_case property naming convention. All chain objects, asset lists, and other data use snake_case keys like chain_name, chain_id, bech32_prefix, etc.
+SOURCE: v1
+
+LANGUAGE: typescript
+CODE:
+```
+import { chains, assets } from 'chain-registry';
+
+// V1 uses snake_case for all property names
+const osmosisChain = {
+  chain_name: "osmosis",
+  chain_id: "osmosis-1", 
+  bech32_prefix: "osmo",
+  pretty_name: "Osmosis",
+  network_type: "mainnet",
+  daemon_name: "osmosisd",
+  node_home: "$HOME/.osmosisd",
+  key_algos: ["secp256k1"],
+  slip44: 118,
+  fees: {
+    fee_tokens: [
+      {
+        denom: "uosmo",
+        low_gas_price: 0.0025,
+        average_gas_price: 0.025,
+        high_gas_price: 0.04
+      }
+    ]
+  }
+};
+
+const osmosisAssets = {
+  chain_name: "osmosis",
+  assets: [
+    {
+      description: "The native token of Osmosis",
+      denom_units: [
+        { denom: "uosmo", exponent: 0 },
+        { denom: "osmo", exponent: 6 }
+      ],
+      base: "uosmo",
+      name: "Osmosis",
+      display: "osmo", 
+      symbol: "OSMO",
+      logo_URIs: {
+        png: "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png"
+      },
+      coingecko_id: "osmosis"
+    }
+  ]
+};
+```
+
+----------------------------------------
+
+TITLE: Chain Registry V2 Data Structure (camelCase)
+DESCRIPTION: Example showing v2 chain registry data structure with camelCase property naming convention. All chain objects, asset lists, and other data use camelCase keys like chainName, chainId, bech32Prefix, etc.
+SOURCE: v2
+
+LANGUAGE: typescript
+CODE:
+```
+import { chains, assets } from 'chain-registry';
+
+// V2 uses camelCase for all property names
+const osmosisChain = {
+  chainName: "osmosis",
+  chainId: "osmosis-1",
+  bech32Prefix: "osmo", 
+  prettyName: "Osmosis",
+  networkType: "mainnet",
+  daemonName: "osmosisd",
+  nodeHome: "$HOME/.osmosisd",
+  keyAlgos: ["secp256k1"],
+  slip44: 118,
+  fees: {
+    feeTokens: [
+      {
+        denom: "uosmo",
+        lowGasPrice: 0.0025,
+        averageGasPrice: 0.025,
+        highGasPrice: 0.04
+      }
+    ]
+  }
+};
+
+const osmosisAssets = {
+  chainName: "osmosis",
+  assets: [
+    {
+      description: "The native token of Osmosis",
+      denomUnits: [
+        { denom: "uosmo", exponent: 0 },
+        { denom: "osmo", exponent: 6 }
+      ],
+      base: "uosmo",
+      name: "Osmosis", 
+      display: "osmo",
+      symbol: "OSMO",
+      logoURIs: {
+        png: "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png"
+      },
+      coingeckoId: "osmosis"
+    }
+  ]
+};
+```

@@ -1,27 +1,76 @@
-TITLE: Initializing ChainRegistryClient (Basic) - JavaScript
-DESCRIPTION: This snippet shows the basic initialization of the `ChainRegistryClient`. It requires an options object specifying the `chainNames` for which data should be fetched. After instantiation, call `fetchUrls()` to load data.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_1
+TITLE: Accessing static chain-registry data in JavaScript
+DESCRIPTION: This JavaScript example demonstrates how to import `assets`, `chains`, and `ibc` directly from the `chain-registry` package. It then shows how to find a specific asset list, such as for 'osmosis', from the imported data.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_1
 
 LANGUAGE: javascript
 CODE:
 ```
-import { ChainRegistryClient } from '@chain-registry/v2-client';
+import { assets, chains, ibc } from 'chain-registry';
 
-const client = new ChainRegistryClient({
-  chainNames: ['osmosis', 'juno']
-});
+const assetList = assets.find(({chain_name})=>chain_name==='osmosis');
+
+console.log(assetList);
 ```
 
 ----------------------------------------
 
-TITLE: Fetching Dynamic Chain Data with @chain-registry/client - JavaScript
-DESCRIPTION: Initializes the `ChainRegistryClient` with a list of specific chain names. Asynchronously fetches the relevant chain info, asset lists, and IBC data dynamically from remote URLs. Provides methods to retrieve the downloaded data for individual chains like 'osmosis'.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_1
+TITLE: Import Chain and Asset Data by Network Type (JavaScript)
+DESCRIPTION: These snippets demonstrate how to import comprehensive chain and asset data directly from the `chain-registry` for different network environments: mainnet, testnet, and devnet. This allows developers to access all relevant information for a specific network type.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_3
 
-LANGUAGE: JavaScript
+LANGUAGE: js
 CODE:
 ```
-import { ChainRegistryClient } from '@chain-registry/v2-client';
+import { assets, chains } from 'chain-registry/mainnet';
+```
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chains } from 'chain-registry/testnet';
+```
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chains } from 'chain-registry/devnet';
+```
+
+----------------------------------------
+
+TITLE: Initialize and Fetch Data with ChainRegistryFetcher
+DESCRIPTION: This snippet demonstrates how to initialize the ChainRegistryFetcher with a list of URLs pointing to chain and asset list JSON files, and then asynchronously fetch all the data. This is the primary method for populating the registry with data.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_12
+
+LANGUAGE: js
+CODE:
+```
+import { ChainRegistryFetcher, ChainRegistryFetcherOptions } from '@chain-registry/client';
+
+const options: ChainRegistryFetcherOptions = {
+  urls: [
+    'https://raw.githubusercontent.com/chain-registry/chain-registry/refs/heads/main/registries/camel/osmosis/chain.json',
+    'https://raw.githubusercontent.com/chain-registry/chain-registry/refs/heads/main/registries/camel/osmosis/assetlist.json',
+    'https://raw.githubusercontent.com/chain-registry/chain-registry/refs/heads/main/registries/camel/juno/assetlist.json',
+    'https://raw.githubusercontent.com/chain-registry/chain-registry/refs/heads/main/registries/camel/secretnetwork/assetlist.json',
+    'https://raw.githubusercontent.com/chain-registry/chain-registry/refs/heads/main/registries/camel/_IBC/juno-osmosis.json',
+    'https://raw.githubusercontent.com/chain-registry/chain-registry/refs/heads/main/registries/camel/_IBC/osmosis-secretnetwork.json'
+  ]
+};
+const registry = new ChainRegistryFetcher(options);
+await registry.fetchUrls();
+```
+
+----------------------------------------
+
+TITLE: Dynamically Fetching Chain Data with ChainRegistryClient
+DESCRIPTION: This JavaScript example illustrates how to use the `@chain-registry/client` to dynamically fetch chain information, asset lists, and IBC data for specified chains. It demonstrates creating a client instance, fetching data from URLs, and retrieving specific chain, asset, and IBC details.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_2
+
+LANGUAGE: javascript
+CODE:
+```
+import { ChainRegistryClient } from '@chain-registry/client';
 
 // create an instance of ChainRegistryClient by passing in the chain names
 const client = new ChainRegistryClient({
@@ -46,53 +95,51 @@ const generatedAssetList = client.getGeneratedAssetLists('osmosis');
 
 ----------------------------------------
 
-TITLE: Fetching Chain/Asset Data (Client) - JavaScript
-DESCRIPTION: This asynchronous call triggers the `ChainRegistryClient` to fetch all configured chain, asset, and IBC data from the registry URLs determined by the client's initialization options. This method must complete before accessing fetched data.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_5
+TITLE: Access Detailed Chain Information with getChainInfo (JS)
+DESCRIPTION: This JavaScript example shows how to retrieve comprehensive information about a specific blockchain chain using the getChainInfo() method of the ChainRegistryClient. It returns a ChainInfo object, which contains detailed data such as assets, IBC connections, and other metadata for the requested chain.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_8
 
-LANGUAGE: javascript
-CODE:
-```
-await client.fetchUrls();
-```
-
-----------------------------------------
-
-TITLE: Getting ChainInfo Object (Client) - JavaScript
-DESCRIPTION: After fetching data with `fetchUrls()`, this method retrieves a comprehensive `ChainInfo` object for a specified chain name. The `ChainInfo` object aggregates the chain's configuration, assets, and related IBC data.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_6
-
-LANGUAGE: javascript
+LANGUAGE: js
 CODE:
 ```
 const osmosisInfo = client.getChainInfo('osmosis');
  // returns ChainInfo, which is an object containing everything
-
 ```
 
 ----------------------------------------
 
-TITLE: Converting Base Unit to Display Unit (TS)
-DESCRIPTION: This TypeScript snippet demonstrates using `convertBaseUnitToDisplayUnit` to convert an amount of an asset from its smallest unit (base unit) to the more common, user-friendly display unit, using the asset's exponent information.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_18
+TITLE: Import Specific Chain Data (e.g., Osmosis Mainnet) (JavaScript)
+DESCRIPTION: These examples illustrate how to import data for a particular chain, such as Osmosis on the mainnet. You can choose to import both assets and chain information, only assets, or only chain-specific details, providing granular control over the imported data.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_4
 
-LANGUAGE: typescript
+LANGUAGE: js
 CODE:
 ```
-const displayUnit = convertBaseUnitToDisplayUnit(assets, 'OSMO', 1000000);
-// displayUnit is the representation of 1,000,000 base units in display units (e.g., OSMO)
+import { assets, chain } from 'chain-registry/mainnet/osmosis';
+```
+
+LANGUAGE: js
+CODE:
+```
+import assets from 'chain-registry/mainnet/osmosis/assets';
+```
+
+LANGUAGE: js
+CODE:
+```
+import chain from 'chain-registry/mainnet/osmosis/chain';
 ```
 
 ----------------------------------------
 
-TITLE: Fetching Chain Data with Direct Import (JavaScript)
-DESCRIPTION: Demonstrates how to import and access chain, asset, and IBC data directly from the `chain-registry` package. This method loads all specified data into memory and allows querying it using standard JavaScript array methods like `find`.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_1
+TITLE: Access static Cosmos chain data
+DESCRIPTION: This JavaScript snippet demonstrates how to import and access static chain data, assets, and IBC information directly from the `chain-registry` package. It shows how to find and log the asset list for a specific chain, such as Osmosis.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/README.md#_snippet_1
 
-LANGUAGE: JavaScript
+LANGUAGE: javascript
 CODE:
 ```
-import { assets, chains, ibc } from '@chain-registry/v2';
+import { assets, chains, ibc } from 'chain-registry';
 
 const assetList = assets.find(({chain_name})=>chain_name==='osmosis');
 
@@ -101,9 +148,51 @@ console.log(assetList);
 
 ----------------------------------------
 
-TITLE: Getting IBC Denomination by Base (TS)
-DESCRIPTION: This TypeScript snippet illustrates how to use the `getIbcDenomByBase` function to calculate the unique IBC hash denomination for an asset when transferred between a source and destination chain, given the base denomination.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_11
+TITLE: Initialize ChainRegistryClient with Specific Chains and IBC Pairs (TS)
+DESCRIPTION: This TypeScript example illustrates initializing a ChainRegistryClient with a defined set of chainNames and specific ibcNamePairs. The client will fetch data for all specified chains, but only the listed IBC connections will be considered when generating IBC-connected assets, optimizing for targeted inter-blockchain communication needs.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_5
+
+LANGUAGE: ts
+CODE:
+```
+import { ChainRegistryClient } from '@chain-registry/client';
+
+const client = new ChainRegistryClient({
+  chainNames: ['osmosis', 'juno', 'stargaze', 'cosmoshub'],
+  ibcNamePairs: [['osmosis', 'stargaze']]
+});
+```
+
+----------------------------------------
+
+TITLE: Importing Only Chain Information for a Specific Mainnet Chain (e.g., Osmosis)
+DESCRIPTION: Demonstrates how to import only the chain information for a specific mainnet chain, such as Osmosis, without importing asset lists.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/README.md#_snippet_8
+
+LANGUAGE: js
+CODE:
+```
+import chain from 'chain-registry/mainnet/osmosis/chain';
+```
+
+----------------------------------------
+
+TITLE: Example: Getting Akash Token (AKT) IBC Denomination on Osmosis
+DESCRIPTION: This snippet provides a concrete example of using getIbcDenomByBase to determine the IBC denomination for Akash Token (AKT) when it is transferred to the Osmosis chain. It includes the expected output, which is the unique IBC hashed string for AKT on Osmosis.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_14
+
+LANGUAGE: typescript
+CODE:
+```
+const aktDenom = getIbcDenomByBase(ibc, 'osmosis', 'akash', assets, 'uakt');
+console.log(aktDenom); // Expected: 'ibc/1480B8FD20AD5FCAE81EA87584D269547DD4D436843C1D20F15E00EB64743EF4'
+```
+
+----------------------------------------
+
+TITLE: Deriving IBC Denomination for a Base Asset
+DESCRIPTION: This example illustrates the usage of getIbcDenomByBase to compute the IBC hashed denomination string for a specific asset. It requires the ibc data, source and destination chain names, asset data, and the base denomination of the asset.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_13
 
 LANGUAGE: typescript
 CODE:
@@ -114,14 +203,26 @@ const denom = getIbcDenomByBase(ibc, 'osmosis', 'akash', assets, 'uakt');
 
 ----------------------------------------
 
-TITLE: Using Chain and AssetList Types (JavaScript)
-DESCRIPTION: Demonstrates importing and utilizing the `Chain` and `AssetList` TypeScript types within JavaScript code. Shows how to define functions that accept typed parameters and examples of data structures that conform to these types for demonstration purposes. Requires the `@chain-registry/v2-types` package installed.
+TITLE: Importing Testnet Chains and Assets
+DESCRIPTION: Demonstrates how to import all chain and asset data specifically for testnet networks from the chain-registry package.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/README.md#_snippet_4
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chains } from 'chain-registry/testnet';
+```
+
+----------------------------------------
+
+TITLE: Import and utilize Chain and AssetList TypeScript types
+DESCRIPTION: This example demonstrates importing `Chain` and `AssetList` types from `@chain-registry/types`. It shows how to define functions that accept these types, enabling strong type-checking and IDE autocomplete for blockchain data structures. Sample data illustrates their practical application.
 SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/types/README.md#_snippet_1
 
 LANGUAGE: js
 CODE:
 ```
-import { Chain, AssetList } from '@chain-registry/v2-types';
+import { Chain, AssetList } from '@chain-registry/types';
 
 function displayChainDetails(chain: Chain) {
     console.log(`Chain Name: ${chain.chainName}`);
@@ -159,61 +260,65 @@ displayAssetDetails(sampleAssetList);
 
 ----------------------------------------
 
-TITLE: Importing Specific Mainnet Chain Data for Tree-Shaking - JavaScript
-DESCRIPTION: Imports static assets and chain information specifically for a single mainnet chain (Osmosis in this example) using a direct path import. This fine-grained import is highly effective for tree-shaking, including only data related to the specified chain.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_5
-
-LANGUAGE: JavaScript
-CODE:
-```
-import { assets, chain } from '@chain-registry/v2/mainnet/osmosis';
-```
-
-----------------------------------------
-
-TITLE: Getting Chain Object by Name (TS)
-DESCRIPTION: This TypeScript snippet shows how to use the `getChainByChainName` function to retrieve a specific chain object from a list of chains using the chain's name as the lookup key.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_2
-
-LANGUAGE: typescript
-CODE:
-```
-const chain = getChainByChainName(chains, 'osmosis');
-// { chain_name: 'osmosis', ... }
-```
-
-----------------------------------------
-
-TITLE: Mapping CoinGecko Prices to Denominations (TS)
-DESCRIPTION: This TypeScript snippet shows how to use `mapCoinGeckoPricesToDenoms` to create a mapping between asset denominations and their current prices, typically obtained from a source like CoinGecko, using the provided asset list.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_15
-
-LANGUAGE: typescript
-CODE:
-```
-const priceMap = mapCoinGeckoPricesToDenoms(assets, coinGeckoPrices);
-// priceMap will now contain a mapping of denominations to their USD prices
-```
-
-----------------------------------------
-
-TITLE: Importing Only Chain Info for a Specific Mainnet Chain - JavaScript
-DESCRIPTION: Imports only the static chain information for a single mainnet chain (Osmosis) using a direct path import to the chain file. This is the most granular tree-shaking import for chain data, including only the core information for a specific chain.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_7
-
-LANGUAGE: JavaScript
-CODE:
-```
-import chain from '@chain-registry/v2/mainnet/osmosis/chain';
-```
-
-----------------------------------------
-
-TITLE: Getting CoinGecko ID by Denomination (JS)
-DESCRIPTION: This JavaScript snippet demonstrates how to retrieve the CoinGecko API ID associated with a specific asset's denomination using the `getCoinGeckoIdByDenom` function, useful for fetching market data.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_9
+TITLE: Convert Chain Registry Chain to Cosmostation AddChainParams
+DESCRIPTION: This JavaScript snippet demonstrates how to convert a `Chain` object from `chain-registry` into a `AddChainParams` type compatible with Cosmostation. It shows basic conversion and an example of providing custom options for endpoint selection, useful for integrating specific chain configurations into Cosmostation.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/cosmostation/README.md#_snippet_1
 
 LANGUAGE: javascript
+CODE:
+```
+import { assets, chains } from 'chain-registry';
+import { chainRegistryChainToCosmostation } from '@chain-registry/cosmostation';
+import { AddChainParams } from '@cosmostation/extension-client/types/message';
+
+const chain = chains.find(({chain_name})=>chain_name==='osmosis');
+const config: AddChainParams = chainRegistryChainToCosmostation(chain, assets);
+
+// you can add options as well to choose endpoints 
+const config: AddChainParams = chainRegistryChainToCosmostation(chain, assets, {
+    getRestEndpoint: (chain) => chain.apis?.rest[1]?.address
+});
+```
+
+----------------------------------------
+
+TITLE: Dynamic data fetching with ChainRegistryClient in JavaScript
+DESCRIPTION: This JavaScript example illustrates how to use the `ChainRegistryClient` from `@chain-registry/client` to dynamically fetch chain data. It shows how to initialize the client with specific chain names, fetch the data, and then retrieve chain information, asset lists, IBC data, and generated asset lists for a given chain.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_2
+
+LANGUAGE: javascript
+CODE:
+```
+import { ChainRegistryClient } from '@chain-registry/client';
+
+// create an instance of ChainRegistryClient by passing in the chain names
+const client = new ChainRegistryClient({
+  chainNames: [
+    'osmosis',
+    'juno',
+    'stargaze'
+  ]
+});
+
+// chain info, assets and ibc data will be downloaded dynamically by invoking fetchUrls method
+await client.fetchUrls();
+// get chain data
+const chain = client.getChain('osmosis');
+// get asset list
+const assetList = client.getChainAssetList('osmosis');
+// get ibc data
+const ibcData = client.getChainIbcData('osmosis');
+// get asset list (including ibc assets)
+const generatedAssetList = client.getGeneratedAssetLists('osmosis');
+```
+
+----------------------------------------
+
+TITLE: Get CoinGecko ID by Asset Denomination
+DESCRIPTION: Illustrates how to fetch the CoinGecko ID associated with an asset's denomination, which can be used to query price data from CoinGecko.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_10
+
+LANGUAGE: js
 CODE:
 ```
 const coinGeckoId = getCoinGeckoIdByDenom(assets, 'uosmo');
@@ -222,36 +327,103 @@ console.log(coinGeckoId); // 'osmosis'
 
 ----------------------------------------
 
-TITLE: Importing Specific Mainnet Chain Info with Tree-Shaking (JavaScript)
-DESCRIPTION: Example of importing only the chain information data for the Osmosis mainnet chain using a direct path import. This provides the most granular import for the chain info of a single chain.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_8
+TITLE: Retrieve Generated Asset Lists from ChainRegistry
+DESCRIPTION: This example illustrates how to obtain generated asset lists for a specific chain directly from the ChainRegistryFetcher instance, returning an array of AssetList objects. This provides a consolidated view of assets for a given chain.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_15
 
-LANGUAGE: JavaScript
+LANGUAGE: js
 CODE:
 ```
-import chain from '@chain-registry/v2/mainnet/osmosis/chain';
+// generated asset lists
+const generated: AssetList[] = registry.getGeneratedAssetLists('osmosis');
 ```
 
 ----------------------------------------
 
-TITLE: Getting Generated Asset Lists (Client) - JavaScript
-DESCRIPTION: This method generates and returns an array of `AssetList` objects for the specified chain. This includes the chain's native assets and additionally generates entries for IBC-connected assets based on the configured `ibcNamePairs`.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_9
+TITLE: ChainRegistryFetcher Class API Reference
+DESCRIPTION: API documentation for the ChainRegistryFetcher class, including its constructor, properties, and methods for fetching chain data and schemata. This class is the primary interface for interacting with the chain registry.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_19
 
-LANGUAGE: javascript
+LANGUAGE: APIDOC
 CODE:
 ```
-const generatedOsmosisAssets = client.getGeneratedAssetLists('osmosis');
-// returns AssetList from '@chain-registry/types' — including generated IBC assets based on IBC connections
+ChainRegistryFetcher:
+  __init__(options: ChainRegistryFetcherOptions)
+    options: ChainRegistryFetcherOptions - Configuration options for the fetcher.
+      urls: string[] - An array of URLs to fetch.
+
+  properties:
+    urls: string[] - (Read/Write) An array of URLs configured for fetching.
+
+  methods:
+    fetchUrls(): Promise<void>
+      description: Fetches data from all URLs specified in the 'urls' property.
+      returns: Promise<void> - A promise that resolves when all URLs have been fetched.
+
+    fetch(url: string): Promise<void>
+      description: Fetches data from a single specified URL.
+      parameters:
+        url: string - The URL to fetch.
+      returns: Promise<void> - A promise that resolves when the URL has been fetched.
+
+    getGeneratedAssetLists(chainName: string): AssetList[]
+      description: Retrieves generated asset lists for a specific chain.
+      parameters:
+        chainName: string - The name of the chain (e.g., 'osmosis').
+      returns: AssetList[] - An array of AssetList objects.
+
+    getChain(chainName: string): Chain
+      description: Retrieves a Chain object for a specific chain.
+      parameters:
+        chainName: string - The name of the chain (e.g., 'osmosis').
+      returns: Chain - The Chain object.
+
+    getChainInfo(chainName: string): ChainInfo
+      description: Retrieves a ChainInfo object for a specific chain.
+      parameters:
+        chainName: string - The name of the chain (e.g., 'osmosis').
+      returns: ChainInfo - The ChainInfo object.
 ```
 
 ----------------------------------------
 
-TITLE: Retrieving ChainInfo and Properties from ChainRegistry JavaScript
-DESCRIPTION: Obtains a comprehensive ChainInfo object for a given chain ID. The example then shows how to access key properties of the ChainInfo object, including the full list of assets (`assetLists`), the core chain details (`chain`), and specifically the native asset list (`nativeAssetList`).
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_16
+TITLE: Dynamically fetch Cosmos chain data with ChainRegistryClient
+DESCRIPTION: This JavaScript example illustrates the use of `@chain-registry/client` for dynamic data fetching. It initializes a client with specified chain names, downloads the latest chain info, assets, and IBC data, and then retrieves specific details like chain data, asset lists, and IBC information for a given chain.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/README.md#_snippet_2
 
 LANGUAGE: javascript
+CODE:
+```
+import { ChainRegistryClient } from '@chain-registry/client';
+
+// create an instance of ChainRegistryClient by passing in the chain names
+const client = new ChainRegistryClient({
+  chainNames: [
+    'osmosis',
+    'juno',
+    'stargaze'
+  ]
+});
+
+// chain info, assets and ibc data will be downloaded dynamically by invoking fetchUrls method
+await client.fetchUrls();
+// get chain data
+const chain = client.getChain('osmosis');
+// get asset list
+const assetList = client.getChainAssetList('osmosis');
+// get ibc data
+const ibcData = client.getChainIbcData('osmosis');
+// get asset list (including ibc assets)
+const generatedAssetList = client.getGeneratedAssetLists('osmosis');
+```
+
+----------------------------------------
+
+TITLE: Access ChainInfo Object and its Properties
+DESCRIPTION: This snippet shows how to retrieve a 'ChainInfo' object for a specific chain and then access its various properties, including 'assetLists', 'chain', and 'nativeAssetList', which provide detailed chain information. The 'ChainInfo' object aggregates related data for convenience.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_18
+
+LANGUAGE: js
 CODE:
 ```
 const chainInfo: ChainInfo = registry.getChainInfo('osmosis');
@@ -268,35 +440,426 @@ const nativeAssetList: AssetList = chainInfo.nativeAssetList;
 
 ----------------------------------------
 
-TITLE: Importing Specific Mainnet Chain Assets with Tree-Shaking (JavaScript)
-DESCRIPTION: Example of importing only the asset data for the Osmosis mainnet chain using a direct path import. This provides the most granular import for assets of a single chain.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_7
-
-LANGUAGE: JavaScript
-CODE:
-```
-import assets from '@chain-registry/v2/mainnet/osmosis/assets';
-```
-
-----------------------------------------
-
-TITLE: Importing Specific Mainnet Chain Data with Tree-Shaking (JavaScript)
-DESCRIPTION: Example of importing data specifically for the Osmosis mainnet chain using a direct path import. This further optimizes bundle size by only including the assets and chain info for the specified chain.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_6
-
-LANGUAGE: JavaScript
-CODE:
-```
-import { assets, chain } from '@chain-registry/v2/mainnet/osmosis';
-```
-
-----------------------------------------
-
-TITLE: Initializing ChainRegistryClient (Custom URL) - JavaScript
-DESCRIPTION: This example demonstrates initializing the client with specific chain names, limiting the `ibcNamePairs` to a subset, and providing a custom `baseUrl` to fetch registry data from a source other than the default GitHub repository.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_2
+TITLE: Initialize ChainRegistryClient with Specific Chains
+DESCRIPTION: This JavaScript snippet demonstrates how to import and instantiate the ChainRegistryClient. It initializes the client to fetch and manage data specifically for the 'osmosis' and 'juno' chains, allowing access to their chain and asset information.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_1
 
 LANGUAGE: javascript
+CODE:
+```
+import { ChainRegistryClient } from '@chain-registry/client';
+
+const client = new ChainRegistryClient({
+  chainNames: ['osmosis', 'juno']
+});
+```
+
+----------------------------------------
+
+TITLE: Access Basic Chain Object with getChain (JS)
+DESCRIPTION: This JavaScript snippet demonstrates how to retrieve just the core Chain object for a specified chain using the getChain() method of the ChainRegistryClient. This method is useful when only the fundamental chain configuration is required, without the extensive details provided by ChainInfo.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_9
+
+LANGUAGE: js
+CODE:
+```
+const osmosisInfo = client.getChain('osmosis');
+ // returns Chain from `@chain-registry/types` 
+```
+
+----------------------------------------
+
+TITLE: Retrieve Generated IBC-Connected Asset Lists (JS)
+DESCRIPTION: This JavaScript snippet demonstrates how to obtain asset lists that include IBC-connected assets using the getGeneratedAssetLists() method of the ChainRegistryClient. This method dynamically generates AssetList objects based on the configured IBC connections, providing a comprehensive view of assets involved in inter-blockchain transfers.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_11
+
+LANGUAGE: js
+CODE:
+```
+const generatedOsmosisAssets = client.getGeneratedAssetLists('osmosis');
+// returns AssetList from '@chain-registry/types' — including generated IBC assets based on IBC connections
+```
+
+----------------------------------------
+
+TITLE: Converting Asset Base Unit to Dollar Value
+DESCRIPTION: This function converts a specified amount from an asset's base unit to its equivalent dollar value. It utilizes the provided price map to accurately calculate the total value in USD for the given base units of the asset.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_19
+
+LANGUAGE: typescript
+CODE:
+```
+const dollarValue = convertBaseUnitToDollarValue(assets, priceMap, 'OSMO', 1000000);
+// dollarValue is the total value in USD of 1,000,000 base units of OSMO
+```
+
+----------------------------------------
+
+TITLE: Initialize ChainRegistryClient with Limited Asset Lists and IBC Pairs (JS)
+DESCRIPTION: This JavaScript example shows how to initialize a ChainRegistryClient by specifying chainNames, limiting assetListNames, and defining specific ibcNamePairs. This setup is useful for optimizing data fetching by only including relevant asset lists and inter-blockchain connections, reducing unnecessary data retrieval.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_4
+
+LANGUAGE: js
+CODE:
+```
+const clientWithAssetLists = new ChainRegistryClient({
+  chainNames: ['osmosis', 'juno', 'stargaze'],
+  assetListNames: ['osmosis', 'juno'],
+  ibcNamePairs: [['osmosis', 'juno']]
+});
+```
+
+----------------------------------------
+
+TITLE: Retrieve Asset List for a Specific Chain (JS)
+DESCRIPTION: This JavaScript example illustrates how to fetch the asset list for a specific blockchain chain, such as 'juno', using the getAssetList() method of the ChainRegistryClient. The returned AssetList contains detailed properties for each asset defined on that chain, including its name, symbol, and other relevant information.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_10
+
+LANGUAGE: js
+CODE:
+```
+const junoAssets = client.getAssetList('juno');
+// returns AssetList from '@chain-registry/types'
+```
+
+----------------------------------------
+
+TITLE: Execute Data Fetching with ChainRegistryClient (JS)
+DESCRIPTION: This JavaScript snippet demonstrates how to initiate the asynchronous data fetching process using the fetchUrls() method of the ChainRegistryClient. This crucial step retrieves all configured chain and asset data from predefined URLs, populating the client's internal state for subsequent data access and manipulation.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_7
+
+LANGUAGE: js
+CODE:
+```
+await client.fetchUrls();
+```
+
+----------------------------------------
+
+TITLE: Importing and Accessing Chain Data from chain-registry
+DESCRIPTION: This JavaScript snippet demonstrates how to import static chain, asset, and IBC data directly from the `chain-registry` package. It shows how to find a specific asset list by chain name, such as 'osmosis', and log its contents.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_1
+
+LANGUAGE: javascript
+CODE:
+```
+import { assets, chains, ibc } from 'chain-registry';
+
+const assetList = assets.find(({chain_name})=>chain_name==='osmosis');
+
+console.log(assetList);
+```
+
+----------------------------------------
+
+TITLE: Converting Asset Base Unit to Display Unit
+DESCRIPTION: This function converts an amount from an asset's base unit to its more user-friendly display unit. This is useful for presenting token amounts in a human-readable format, such as converting uosmo to OSMO.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_21
+
+LANGUAGE: typescript
+CODE:
+```
+const displayUnit = convertBaseUnitToDisplayUnit(assets, 'OSMO', 1000000);
+// displayUnit is the representation of 1,000,000 base units in display units (e.g., OSMO)
+```
+
+----------------------------------------
+
+TITLE: ChainRegistryClient Constructor Options
+DESCRIPTION: This section details the available options for customizing the ChainRegistryClient upon instantiation. These options control which chain data, asset lists, and IBC connections the client will manage, allowing for tailored data fetching and processing.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_2
+
+LANGUAGE: APIDOC
+CODE:
+```
+ChainRegistryClient(options: object)
+  options:
+    chainNames (required): string[]
+      Description: An array of strings representing the names of the chains to fetch data for.
+    assetListNames (optional): string[]
+      Description: An array of strings specifying the names of the chains for which asset lists should be fetched. Defaults to `chainNames` if not provided.
+    ibcNamePairs (optional): string[][]
+      Description: An array of string arrays, where each nested array contains two elements representing a pair of chain names. Specifies IBC connections for data consideration.
+    baseUrl (optional): string
+      Description: A string representing the base URL for fetching the chain registry data. Defaults to `https://raw.githubusercontent.com/chain-registry/chain-registry/refs/heads/main/registries/camel`. Supports `camel` or `minimal` registries.
+```
+
+----------------------------------------
+
+TITLE: Importing Chains and Assets for a Specific Mainnet Chain (e.g., Osmosis)
+DESCRIPTION: Shows how to import both chain and asset data for a particular mainnet chain, such as Osmosis, directly from its dedicated path.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/README.md#_snippet_6
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chain } from 'chain-registry/mainnet/osmosis';
+```
+
+----------------------------------------
+
+TITLE: Converting Asset Display Unit to Base Unit
+DESCRIPTION: This function converts an amount from an asset's display unit back to its base unit. This is essential for internal calculations that typically operate on the smallest, indivisible unit of a token.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_22
+
+LANGUAGE: typescript
+CODE:
+```
+const baseUnit = convertDisplayUnitToBaseUnit(assets, 'OSMO', 1);
+// baseUnit is the amount in base units that corresponds to 1 display unit (e.g., 1 OSMO)
+```
+
+----------------------------------------
+
+TITLE: Asset Information Retrieval Functions API
+DESCRIPTION: API reference for functions designed to retrieve detailed asset information. These functions allow querying assets by denomination, symbol, or associated chain names, and fetching related data like logos and CoinGecko IDs.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_11
+
+LANGUAGE: APIDOC
+CODE:
+```
+getAssetByDenom: Retrieve an asset by its denomination.
+getAssetBySymbol: Find an asset by its symbol.
+getChainLogo: Get the logo URL of a chain.
+getChainNameByDenom: Determine the chain name given an asset's denomination.
+getChainNameByStakingDenom: Find the chain name by its staking token denomination.
+getCoinGeckoIdByDenom: Get the CoinGecko ID associated with an asset denomination.
+getDenomByCoinGeckoId: Find the denomination for an asset given its CoinGecko ID.
+getSymbolByDenom: Retrieve the symbol associated with a denomination.
+getDenomBySymbol: Get the denomination of an asset by its symbol.
+getExponentByDenom: Find the exponent for a denomination.
+getExponentBySymbol: Get the exponent for a symbol.
+getNativeAssetByChainName: Retrieve the native token for a given chain name.
+getAssetLogoByDenom: Get the logo URL for a token by its denomination.
+getAssetNameByDenom: Find the name of a token by its denomination.
+```
+
+----------------------------------------
+
+TITLE: Importing Mainnet Chains and Assets
+DESCRIPTION: Demonstrates how to import all chain and asset data specifically for mainnet networks from the chain-registry package.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/README.md#_snippet_3
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chains } from 'chain-registry/mainnet';
+```
+
+----------------------------------------
+
+TITLE: Use Chain Interface for Type-Safe Chain Data
+DESCRIPTION: This example demonstrates how to import and use the 'Chain' interface from @chain-registry/interfaces to define type-safe functions and data structures for chain information, ensuring compile-time checks and IDE auto-completion.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/interfaces/README.md#_snippet_1
+
+LANGUAGE: typescript
+CODE:
+```
+import { Chain } from '@chain-registry/interfaces';
+
+function displayChainInfo(chain: Chain) {
+    console.log(`Chain Name: ${chain.chain_name}`);
+    console.log(`Chain ID: ${chain.chain_id}`);
+    // Add more fields as necessary
+}
+
+// Example usage with dummy data
+const cosmosHub: Chain = {
+    chain_name: "Cosmos Hub",
+    chain_id: "cosmoshub-4",
+    bech32_prefix: "cosmos"
+    // Assume other necessary fields are filled in
+};
+
+displayChainInfo(cosmosHub);
+```
+
+----------------------------------------
+
+TITLE: Retrieve Asset by Denomination
+DESCRIPTION: Demonstrates how to find a specific asset object using its unique denomination (e.g., 'uosmo') and the associated chain name ('osmosis'). This helps in identifying assets within a particular blockchain context.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_8
+
+LANGUAGE: js
+CODE:
+```
+const asset = getAssetByDenom(assets, 'uosmo', 'osmosis');
+console.log(asset?.base); // 'uosmo'
+```
+
+----------------------------------------
+
+TITLE: Importing Specific Chain or Asset Data for a Particular Mainnet Chain (JS)
+DESCRIPTION: Shows how to import chain and asset data, or just assets, or just chain information, for a specific chain like Osmosis from the mainnet. This is useful for applications requiring data for a single blockchain.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_4
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chain } from 'chain-registry/mainnet/osmosis';
+```
+
+LANGUAGE: js
+CODE:
+```
+import assets from 'chain-registry/mainnet/osmosis/assets';
+```
+
+LANGUAGE: js
+CODE:
+```
+import chain from 'chain-registry/mainnet/osmosis/chain';
+```
+
+----------------------------------------
+
+TITLE: Retrieve Chain Object by Name
+DESCRIPTION: Demonstrates how to fetch a complete chain object from a list of chains by providing its chain name, such as 'osmosis'. This returns the full chain configuration.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_2
+
+LANGUAGE: ts
+CODE:
+```
+const chain = getChainByChainName(chains, 'osmosis');
+// { chain_name: 'osmosis', ... }
+```
+
+----------------------------------------
+
+TITLE: Get Gas Price Ranges for a Chain
+DESCRIPTION: Explains how to find the recommended gas price ranges (low, average, high) for a specific chain, useful for transaction fee estimation.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_5
+
+LANGUAGE: ts
+CODE:
+```
+const gasPriceRanges = getChainGasPriceRanges(chains, 'osmosis');
+// { low: number, average: number, high: number }
+```
+
+----------------------------------------
+
+TITLE: Retrieve Chain Object from ChainRegistry
+DESCRIPTION: This example demonstrates how to get a 'Chain' object for a specific chain directly from the ChainRegistryFetcher instance using the 'getChain' method. The 'Chain' object contains core information about the blockchain.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_17
+
+LANGUAGE: js
+CODE:
+```
+// get Chain from registry
+const chain: Chain = registry.getChain('osmosis');
+```
+
+----------------------------------------
+
+TITLE: Get Chain ID by Chain Name
+DESCRIPTION: Illustrates how to obtain the unique chain ID for a specified chain name, for example, retrieving 'osmosis-1' for 'osmosis'.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_3
+
+LANGUAGE: ts
+CODE:
+```
+const chainId = getChainIdByChainName(chains, 'osmosis');
+// 'osmosis-1'
+```
+
+----------------------------------------
+
+TITLE: Access Generated Asset Lists from ChainInfo Object
+DESCRIPTION: This snippet shows an alternative way to access generated asset lists by first retrieving a ChainInfo object for a specific chain, and then accessing its 'assetLists' property. This method is useful when you already have the ChainInfo object.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_16
+
+LANGUAGE: js
+CODE:
+```
+// you can also get generated assets from ChainInfo object
+const chainInfo: Chain = registry.getChainInfo('osmosis');
+const generatedAssets: AssetList[] = chainInfo.assetLists;
+```
+
+----------------------------------------
+
+TITLE: Example: Getting Stargaze Token (STARS) IBC Denomination on Osmosis
+DESCRIPTION: This snippet provides a concrete example of using getIbcDenomByBase to determine the IBC denomination for Stargaze Token (STARS) when it is transferred to the Osmosis chain. It includes the expected output, which is the unique IBC hashed string for STARS on Osmosis.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_15
+
+LANGUAGE: typescript
+CODE:
+```
+const starsDenom = getIbcDenomByBase(ibc, 'osmosis', 'stargaze', assets, 'ustars');
+console.log(starsDenom); // Expected: 'ibc/987C17B11ABC2B20019178ACE62929FE9840202CE79498E29FE8E5CB02B7C0A4'
+```
+
+----------------------------------------
+
+TITLE: IBC Asset Management Functions API
+DESCRIPTION: API reference for functions that facilitate Inter-Blockchain Communication (IBC) asset management. These utilities enable the derivation of IBC denominations and tracing of asset paths across multiple chains.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_16
+
+LANGUAGE: APIDOC
+CODE:
+```
+ibcDenom: Generates the IBC denomination for an asset based on its transfer path.
+getIbcAssetPath: Determines the path an asset takes across chains in the IBC network.
+getIbcDenomByBase: Computes the IBC denomination for an asset from its base denomination.
+```
+
+----------------------------------------
+
+TITLE: Get Pretty Name of a Chain
+DESCRIPTION: Shows how to retrieve the user-friendly display name of a blockchain, such as 'Osmosis' for the 'osmosis' chain.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_4
+
+LANGUAGE: ts
+CODE:
+```
+const prettyName = getChainPrettyName(chains, 'osmosis');
+// 'Osmosis'
+```
+
+----------------------------------------
+
+TITLE: Importing Devnet Chains and Assets
+DESCRIPTION: Demonstrates how to import all chain and asset data specifically for devnet networks from the chain-registry package.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/README.md#_snippet_5
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chains } from 'chain-registry/devnet';
+```
+
+----------------------------------------
+
+TITLE: Importing All Chain and Asset Data by Network Type (JS)
+DESCRIPTION: Demonstrates how to import all available chain and asset data for mainnet, testnet, and devnet networks using the 'chain-registry' module. This allows for broad access to network-specific information.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_3
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chains } from 'chain-registry/mainnet';
+```
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chains } from 'chain-registry/testnet';
+```
+
+LANGUAGE: js
+CODE:
+```
+import { assets, chains } from 'chain-registry/devnet';
+```
+
+----------------------------------------
+
+TITLE: Initialize ChainRegistryClient with Custom Base URL and IBC Pairs (JS)
+DESCRIPTION: This JavaScript example demonstrates initializing a ChainRegistryClient with specific chainNames, a limited set of ibcNamePairs, and a custom baseUrl. This configuration allows for precise control over the data sources and inter-blockchain connections managed by the client.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_3
+
+LANGUAGE: js
 CODE:
 ```
 const client = new ChainRegistryClient({
@@ -308,204 +871,11 @@ const client = new ChainRegistryClient({
 
 ----------------------------------------
 
-TITLE: Converting Dollar Value to Base Unit (TS)
-DESCRIPTION: This TypeScript snippet shows how to use `convertDollarValueToBaseUnit` to determine the quantity of an asset, in its base unit, that corresponds to a specific dollar value, based on the provided asset list and price map.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_17
+TITLE: Import Asset Utility Functions
+DESCRIPTION: Imports various functions from `@chain-registry/utils` designed for accessing and managing blockchain asset details. It also imports the `assets` array from `chain-registry` for use with these utilities.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_7
 
-LANGUAGE: typescript
-CODE:
-```
-const baseUnit = convertDollarValueToBaseUnit(assets, priceMap, 'OSMO', 100);
-// baseUnit is the amount in base units of OSMO that equals 100 USD
-```
-
-----------------------------------------
-
-TITLE: Converting Base Unit to Dollar Value (TS)
-DESCRIPTION: This TypeScript snippet demonstrates how to use `convertBaseUnitToDollarValue` to calculate the equivalent value in USD for a given amount of an asset, specified in its base unit, using a previously generated price map.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_16
-
-LANGUAGE: typescript
-CODE:
-```
-const dollarValue = convertBaseUnitToDollarValue(assets, priceMap, 'OSMO', 1000000);
-// dollarValue is the total value in USD of 1,000,000 base units of OSMO
-```
-
-----------------------------------------
-
-TITLE: Importing Mainnet Data for Tree-Shaking - JavaScript
-DESCRIPTION: Imports static assets and chain information specifically filtered for mainnet networks using a direct path import. This method leverages tree-shaking capabilities to include only the data relevant to mainnet chains, optimizing bundle size.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_2
-
-LANGUAGE: JavaScript
-CODE:
-```
-import { assets, chains } from '@chain-registry/v2/mainnet';
-```
-
-----------------------------------------
-
-TITLE: Importing Only Assets for a Specific Mainnet Chain - JavaScript
-DESCRIPTION: Imports only the static asset list for a single mainnet chain (Osmosis) using a direct path import to the assets file. This is the most granular tree-shaking import for assets, pulling in only the necessary data for a single chain's assets.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_6
-
-LANGUAGE: JavaScript
-CODE:
-```
-import assets from '@chain-registry/v2/mainnet/osmosis/assets';
-```
-
-----------------------------------------
-
-TITLE: Converting Display Unit to Base Unit (TS)
-DESCRIPTION: This TypeScript snippet shows how to use `convertDisplayUnitToBaseUnit` to convert an amount of an asset from its display unit back to its smallest representation, the base unit, utilizing the asset's exponent.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_19
-
-LANGUAGE: typescript
-CODE:
-```
-const baseUnit = convertDisplayUnitToBaseUnit(assets, 'OSMO', 1);
-// baseUnit is the amount in base units that corresponds to 1 display unit (e.g., 1 OSMO)
-```
-
-----------------------------------------
-
-TITLE: Rounding Down a Number (TS)
-DESCRIPTION: This TypeScript snippet demonstrates the usage of the `roundDown` function to truncate a number towards zero, effectively removing any fractional part and returning the nearest lower integer as a string.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_20
-
-LANGUAGE: typescript
-CODE:
-```
-const rounded = roundDown(123.4567);
-// rounded will be '123'
-```
-
-----------------------------------------
-
-TITLE: Getting Chain Gas Price Ranges (TS)
-DESCRIPTION: This TypeScript snippet shows how to use the `getChainGasPriceRanges` function to obtain an object containing the low, average, and high gas price suggestions for a specified chain name.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_5
-
-LANGUAGE: typescript
-CODE:
-```
-const gasPriceRanges = getChainGasPriceRanges(chains, 'osmosis');
-// { low: number, average: number, high: number }
-```
-
-----------------------------------------
-
-TITLE: Importing Mainnet Data with Tree-Shaking (JavaScript)
-DESCRIPTION: Example of importing only mainnet chain and asset data from the `chain-registry` package using a direct path import. This method leverages tree-shaking to reduce bundle size by including only the mainnet data subset.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_3
-
-LANGUAGE: JavaScript
-CODE:
-```
-import { assets, chains } from '@chain-registry/v2/mainnet';
-```
-
-----------------------------------------
-
-TITLE: Getting Chain Pretty Name (TS)
-DESCRIPTION: This TypeScript snippet illustrates how to retrieve the user-friendly display name (pretty name) for a chain based on its internal name using the `getChainPrettyName` function.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_4
-
-LANGUAGE: typescript
-CODE:
-```
-const prettyName = getChainPrettyName(chains, 'osmosis');
-// 'Osmosis'
-```
-
-----------------------------------------
-
-TITLE: Getting IBC Denomination for STARS on Osmosis (TS)
-DESCRIPTION: This TypeScript snippet provides a specific example of using `getIbcDenomByBase` to determine the IBC denomination for the Stargaze Token (STARS, base denom 'ustars') after it has been transferred to the Osmosis chain.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_13
-
-LANGUAGE: typescript
-CODE:
-```
-const starsDenom = getIbcDenomByBase(ibc, 'osmosis', 'stargaze', assets, 'ustars');
-console.log(starsDenom); // Expected: 'ibc/987C17B11ABC2B20019178ACE62929FE9840202CE79498E29FE8E5CB02B7C0A4'
-```
-
-----------------------------------------
-
-TITLE: Getting IBC Denomination for AKT on Osmosis (TS)
-DESCRIPTION: This TypeScript snippet provides a specific example of using `getIbcDenomByBase` to find the IBC denomination for the Akash Token (AKT, base denom 'uakt') when it is transferred to the Osmosis chain.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_12
-
-LANGUAGE: typescript
-CODE:
-```
-const aktDenom = getIbcDenomByBase(ibc, 'osmosis', 'akash', assets, 'uakt');
-console.log(aktDenom); // Expected: 'ibc/1480B8FD20AD5FCAE81EA87584D269547DD4D436843C1D20F15E00EB64743EF4'
-```
-
-----------------------------------------
-
-TITLE: Getting Chain ID by Name (TS)
-DESCRIPTION: This TypeScript snippet demonstrates how to get the unique chain ID string associated with a given chain name using the `getChainIdByChainName` utility function.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_3
-
-LANGUAGE: typescript
-CODE:
-```
-const chainId = getChainIdByChainName(chains, 'osmosis');
-// 'osmosis-1'
-```
-
-----------------------------------------
-
-TITLE: Importing Chain Utility Functions (JS)
-DESCRIPTION: This JavaScript snippet demonstrates how to import various utility functions related to chain data and the 'chains' array from the 'chain-registry' package, which serves as a data source for these utilities.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_1
-
-LANGUAGE: javascript
-CODE:
-```
-import {
-  getGasPriceRangesFromChain,
-  getChainByChainName,
-  getChainByChainId,
-  getChainNameByChainId,
-  getChainIdByChainName,
-  getChainGasPriceRanges,
-  getChainPrettyName,
-  getChainBech32Prefix
-} from '@chain-registry/v2-utils';
-
-// import from chain-registry or your own Chain[]
-import { chains } from '@chain-registry/v2';
-
-// API
-import { Chain } from '@chain-registry/types';
-export interface GasPriceRanges {
-    low: number;
-    average: number;
-    high: number;
-}
-export declare const getGasPriceRangesFromChain: (chain: Chain) => GasPriceRanges;
-export declare const getChainByChainName: (chains: Chain[], chainName: string) => Chain | undefined;
-export declare const getChainByChainId: (chains: Chain[], chainId: string) => Chain | undefined;
-export declare const getChainNameByChainId: (chains: Chain[], chainId: string) => string | undefined;
-export declare const getChainIdByChainName: (chains: Chain[], chainName: string) => string | undefined;
-export declare const getChainGasPriceRanges: (chains: Chain[], chainName: string) => GasPriceRanges | undefined;
-export declare const getChainPrettyName: (chains: Chain[], chainName: string) => string | undefined;
-export declare const getChainBech32Prefix: (chains: Chain[], chainName: string) => string | undefined;
-```
-
-----------------------------------------
-
-TITLE: Importing Asset Utility Functions (JS)
-DESCRIPTION: This JavaScript snippet shows how to import various functions designed for interacting with asset data and the 'assets' array from the 'chain-registry' package, which provides the asset information.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_6
-
-LANGUAGE: javascript
+LANGUAGE: js
 CODE:
 ```
 import {
@@ -523,12 +893,276 @@ import {
   getSymbolByDenom,
   getAssetLogoByDenom,
   getAssetNameByDenom
-} from '@chain-registry/v2-utils';
+} from '@chain-registry/utils';
 
 // import from chain-registry or your own AssetList[]
-import { assets } from '@chain-registry/v2';
+import { assets } from 'chain-registry';
+```
 
-// API
+----------------------------------------
+
+TITLE: Calculation Utility Functions API
+DESCRIPTION: API reference for functions that provide utilities for converting asset units, calculating their values based on market data, and performing rounding operations. These are essential for financial computations within the registry.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_24
+
+LANGUAGE: APIDOC
+CODE:
+```
+mapCoinGeckoPricesToDenoms: Maps CoinGecko price data to asset denominations.
+convertBaseUnitToDollarValue: Converts an amount in the base unit of an asset to its dollar value.
+convertDollarValueToBaseUnit: Converts a dollar value into the base unit of a specified asset.
+convertBaseUnitToDisplayUnit: Converts an amount from the base unit to the display unit of an asset.
+convertDisplayUnitToBaseUnit: Converts an amount from the display unit to the base unit of an asset.
+roundDown: Rounds down a number to the nearest integer.
+```
+
+----------------------------------------
+
+TITLE: Converting Dollar Value to Asset Base Unit
+DESCRIPTION: This function converts a given dollar value back into the base unit amount of a specified asset. It uses the current price from the price map to determine how many base units correspond to the input USD value.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_20
+
+LANGUAGE: typescript
+CODE:
+```
+const baseUnit = convertDollarValueToBaseUnit(assets, priceMap, 'OSMO', 100);
+// baseUnit is the amount in base units of OSMO that equals 100 USD
+```
+
+----------------------------------------
+
+TITLE: Importing Calculation Utility Functions
+DESCRIPTION: This snippet demonstrates how to import various calculation utility functions from @chain-registry/utils. These functions are designed for converting asset units, calculating values based on market data, and performing financial rounding operations.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_17
+
+LANGUAGE: javascript
+CODE:
+```
+import {
+  mapCoinGeckoPricesToDenoms,
+  convertBaseUnitToDollarValue,
+  convertDollarValueToBaseUnit,
+  convertBaseUnitToDisplayUnit,
+  convertDisplayUnitToBaseUnit,
+  roundDown
+} from '@chain-registry/utils';
+```
+
+----------------------------------------
+
+TITLE: Mapping CoinGecko Prices to Asset Denominations
+DESCRIPTION: This function maps prices obtained from CoinGecko to the corresponding denominations in the asset list. This mapping is crucial for facilitating accurate price-related calculations across various assets within the registry.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_18
+
+LANGUAGE: typescript
+CODE:
+```
+const priceMap = mapCoinGeckoPricesToDenoms(assets, coinGeckoPrices);
+// priceMap will now contain a mapping of denominations to their USD prices
+```
+
+----------------------------------------
+
+TITLE: Importing Assets from Non-Cosmos Chains (JS)
+DESCRIPTION: Illustrates how to import asset data specifically for non-Cosmos chains using the 'chain-registry' module. This provides access to assets from blockchain networks outside the Cosmos ecosystem.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/chain-registry/README.md#_snippet_5
+
+LANGUAGE: js
+CODE:
+```
+import { assets } from 'chain-registry/noncosmos';
+```
+
+----------------------------------------
+
+TITLE: Importing IBC Asset Utility Functions
+DESCRIPTION: This snippet demonstrates how to import essential IBC utility functions like getIbcAssetPath, getIbcDenomByBase, and ibcDenom from @chain-registry/utils. It also shows importing assets and ibc data, which are crucial for these functions, from chain-registry.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_12
+
+LANGUAGE: typescript
+CODE:
+```
+import { 
+  getIbcAssetPath,
+  getIbcDenomByBase,
+  ibcDenom
+} from '@chain-registry/utils';
+
+// import from chain-registry or your own data
+import { assets, ibc } from 'chain-registry';
+```
+
+----------------------------------------
+
+TITLE: Import Chain Utility Functions
+DESCRIPTION: Imports a set of specific functions from `@chain-registry/utils` for managing and retrieving blockchain-specific data. It also imports the `chains` array from `chain-registry` for use with these utilities.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_1
+
+LANGUAGE: js
+CODE:
+```
+import {
+  getGasPriceRangesFromChain,
+  getChainByChainName,
+  getChainByChainId,
+  getChainNameByChainId,
+  getChainIdByChainName,
+  getChainGasPriceRanges,
+  getChainPrettyName,
+  getChainBech32Prefix
+} from '@chain-registry/utils';
+
+// import from chain-registry or your own Chain[]
+import { chains } from 'chain-registry';
+```
+
+----------------------------------------
+
+TITLE: Importing Only Assets for a Specific Mainnet Chain (e.g., Osmosis)
+DESCRIPTION: Illustrates how to import only the asset list for a specific mainnet chain, like Osmosis, without importing chain information.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/README.md#_snippet_7
+
+LANGUAGE: js
+CODE:
+```
+import assets from 'chain-registry/mainnet/osmosis/assets';
+```
+
+----------------------------------------
+
+TITLE: Fetch Single Schema with ChainRegistryFetcher.fetch
+DESCRIPTION: This snippet demonstrates how to use the 'fetch' method to retrieve a single JSON schema from a specific URL, useful for fetching individual registry files or custom schemas not included in the initial URL list.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_14
+
+LANGUAGE: js
+CODE:
+```
+await registry.fetch('https://some-json-schema.com/some-schema.json');
+```
+
+----------------------------------------
+
+TITLE: ChainInfo Interface API Reference
+DESCRIPTION: API documentation for the ChainInfo object, providing access to related chain data such as asset lists and the chain object itself. This interface consolidates various pieces of information about a specific blockchain.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_20
+
+LANGUAGE: APIDOC
+CODE:
+```
+ChainInfo:
+  properties:
+    assetLists: AssetList[] - An array of generated AssetList objects associated with the chain.
+    chain: Chain - The Chain object itself.
+    nativeAssetList: AssetList - The native asset list for the chain.
+```
+
+----------------------------------------
+
+TITLE: Update URLs and Fetch Data with fetchUrls
+DESCRIPTION: This example shows how to dynamically update the list of URLs on an existing ChainRegistryFetcher instance and then trigger a fetch operation for the newly specified URLs. This allows for flexible data updates without re-initializing the fetcher.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/client/README.md#_snippet_13
+
+LANGUAGE: js
+CODE:
+```
+registry.urls = [
+  // urls to fetch
+];
+await registry.fetchUrls();
+```
+
+----------------------------------------
+
+TITLE: Import Assets from Non-Cosmos Chains (JavaScript)
+DESCRIPTION: This snippet shows how to import asset data specifically for non-Cosmos chains. This is useful when your application needs to interact with or display information about blockchain networks outside the Cosmos ecosystem.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/README.md#_snippet_5
+
+LANGUAGE: js
+CODE:
+```
+import { assets } from 'chain-registry/noncosmos';
+```
+
+----------------------------------------
+
+TITLE: Get Chain Logo URL
+DESCRIPTION: Shows how to retrieve the URL for a chain's official logo image, using the chain's name (e.g., 'comdex'). This is useful for displaying chain branding.
+SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_9
+
+LANGUAGE: js
+CODE:
+```
+const logo = getChainLogo(assets, 'comdex');
+console.log(logo); // 'https://raw.githubusercontent.com/cosmos/chain-registry/master/comdex/images/cmdx.png'
+```
+
+----------------------------------------
+
+TITLE: Chain Utility Functions Types
+DESCRIPTION: The types for chain utility functions
+SOURCE: v1, v2
+
+LANGUAGE: javascript
+CODE:
+```
+/************************
+ * Chain utils
+ ************************/
+import {
+  getGasPriceRangesFromChain,
+  getChainByChainName,
+  getChainByChainId,
+  getChainNameByChainId,
+  getChainIdByChainName,
+  getChainGasPriceRanges,
+  getChainPrettyName,
+  getChainBech32Prefix
+} from '@chain-registry/utils';
+
+// import from chain-registry or your own Chain[]
+import { chains } from 'chain-registry';
+
+// Type Definitions
+import { Chain } from '@chain-registry/types';
+export interface GasPriceRanges {
+    low: number;
+    average: number;
+    high: number;
+}
+export declare const getGasPriceRangesFromChain: (chain: Chain) => GasPriceRanges;
+export declare const getChainByChainName: (chains: Chain[], chainName: string) => Chain | undefined;
+export declare const getChainByChainId: (chains: Chain[], chainId: string) => Chain | undefined;
+export declare const getChainNameByChainId: (chains: Chain[], chainId: string) => string | undefined;
+export declare const getChainIdByChainName: (chains: Chain[], chainName: string) => string | undefined;
+export declare const getChainGasPriceRanges: (chains: Chain[], chainName: string) => GasPriceRanges | undefined;
+export declare const getChainPrettyName: (chains: Chain[], chainName: string) => string | undefined;
+export declare const getChainBech32Prefix: (chains: Chain[], chainName: string) => string | undefined;
+
+
+/************************
+ * Asset utils
+ ************************/
+import {
+  getAssetByDenom,
+  getAssetBySymbol,
+  getChainLogo,
+  getChainNameByDenom,
+  getChainNameByStakingDenom,
+  getCoinGeckoIdByDenom,
+  getDenomByCoinGeckoId,
+  getDenomBySymbol,
+  getExponentByDenom,
+  getExponentBySymbol,
+  getNativeAssetByChainName,
+  getSymbolByDenom,
+  getAssetLogoByDenom,
+  getAssetNameByDenom
+} from '@chain-registry/utils';
+
+// import from chain-registry or your own AssetList[]
+import { assets } from 'chain-registry';
+
+// Type Definitions
 import { Asset, AssetList, Chain, DenomUnit } from '@chain-registry/types';
 export type Denom = DenomUnit['denom'];
 export type Exponent = DenomUnit['exponent'];
@@ -556,17 +1190,11 @@ export declare const getAssetNameByDenom: (assets: AssetList[], denom: Denom, ch
 export declare const getChainNameByDenom: (assets: AssetList[], denom: Denom) => string | undefined;
 export declare const getChainByStakingDenom: (chains: Chain[], denom: Denom) => Chain | undefined;
 export declare const getChainNameByStakingDenom: (chains: Chain[], denom: Denom) => string | undefined;
-```
 
-----------------------------------------
 
-TITLE: Importing Calculation Utility Functions (JS)
-DESCRIPTION: This JavaScript snippet demonstrates how to import various utility functions focused on asset unit conversions and price calculations from the @chain-registry/utils package.
-SOURCE: https://github.com/hyperweb-io/chain-registry/blob/main/v2/packages/utils/README.md#_snippet_14
-
-LANGUAGE: javascript
-CODE:
-```
+/************************
+ * Calculation utils
+ ************************/
 import {
   mapCoinGeckoPricesToDenoms,
   convertBaseUnitToDollarValue,
@@ -574,9 +1202,9 @@ import {
   convertBaseUnitToDisplayUnit,
   convertDisplayUnitToBaseUnit,
   roundDown
-} from '@chain-registry/v2-utils';
+} from '@chain-registry/utils';
 
-// API
+// Type Definitions
 import { AssetList } from '@chain-registry/types';
 import { Denom } from './assets';
 export interface CoinGeckoUSDPrice {
@@ -593,4 +1221,59 @@ export declare const convertDollarValueToBaseUnit: (assets: AssetList[], prices:
 export declare const convertBaseUnitToDisplayUnit: (assets: AssetList[], symbol: string, amount: string | number, chainName?: string) => string;
 export declare const convertBaseUnitToDisplayUnitByDenom: (assets: AssetList[], denom: string, amount: string | number, chainName?: string) => string;
 export declare const convertDisplayUnitToBaseUnit: (assets: AssetList[], symbol: string, amount: string | number, chainName?: string) => string;
+
+----------------------------------------
+
+TITLE: Chain Registry V2 Data Structure (camelCase)
+DESCRIPTION: Example showing v2 chain registry data structure with camelCase property naming convention. All chain objects, asset lists, and other data use camelCase keys like chainName, chainId, bech32Prefix, etc.
+SOURCE: v2
+
+LANGUAGE: typescript
+CODE:
+```
+import { chains, assets } from 'chain-registry';
+
+// V2 uses camelCase for all property names
+const osmosisChain = {
+  chainName: "osmosis",
+  chainId: "osmosis-1",
+  bech32Prefix: "osmo", 
+  prettyName: "Osmosis",
+  networkType: "mainnet",
+  daemonName: "osmosisd",
+  nodeHome: "$HOME/.osmosisd",
+  keyAlgos: ["secp256k1"],
+  slip44: 118,
+  fees: {
+    feeTokens: [
+      {
+        denom: "uosmo",
+        lowGasPrice: 0.0025,
+        averageGasPrice: 0.025,
+        highGasPrice: 0.04
+      }
+    ]
+  }
+};
+
+const osmosisAssets = {
+  chainName: "osmosis",
+  assets: [
+    {
+      description: "The native token of Osmosis",
+      denomUnits: [
+        { denom: "uosmo", exponent: 0 },
+        { denom: "osmo", exponent: 6 }
+      ],
+      base: "uosmo",
+      name: "Osmosis", 
+      display: "osmo",
+      symbol: "OSMO",
+      logoURIs: {
+        png: "https://raw.githubusercontent.com/cosmos/chain-registry/master/osmosis/images/osmo.png"
+      },
+      coingeckoId: "osmosis"
+    }
+  ]
+};
 ```
