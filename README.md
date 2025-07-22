@@ -2,6 +2,9 @@
 
 This project implements a Model Context Protocol (MCP) server that helps you use Hyperweb platform tools better and easier with AI agents.
 
+> 🛠️ This is for the [Hyperweb MCP Server](https://github.com/hyperweb-io/mcp). Looking to **generate an MCP server from your blockchain**?  
+> Use [Telescope's MCP integration guide](https://docs.hyperweb.io/telescope/developing/mcp-integration) to get started.
+
 ## Setup
 
 To run the Hyperweb MCP server using npx, use the following command:
