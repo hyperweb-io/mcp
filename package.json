@@ -22,7 +22,7 @@
     "release": "semantic-release"
   },
   "keywords": [],
-  "author": "developers@hyperweb.io",
+  "author": "developers@interweb.co",
   "homepage": "https://github.com/hyperweb-io/mcp",
   "license": "MIT",
   "type": "module",
